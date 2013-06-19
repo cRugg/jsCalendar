@@ -7,18 +7,6 @@
     var monthObj = {
     
         currentMonth: dateObj.getMonth() + 1, // In getMonth() January === 0. To stay sane I add 1
-        
-        //name: returns the result of the getName: function (Well, it's supposed to.)
-        name: function()
-        {
-            return this.getName(this.currentMonth);
-        },
-        
-        //daysInMonth: returns the result of getDaysInMonth: function (Well, it's supposed to.)
-        daysInMonth: function() 
-        {
-            return this.getDaysInMonth();
-        },
 
         //getName: goes through the if statements and returns a string of the name of the current month
         getName: function(currentMonthNumber)
@@ -37,16 +25,24 @@
             if (currentMonthNumber === 12) {return "December"}
         },
 
-        //getDaysInMonth: returns the amount of days in the current month
+       //getDaysInMonth: returns the amount of days in the current month
         getDaysInMonth: function()
         {
+            var year = dateObj.getFullYear();
+            
             if (this.currentMonth === 1 || this.currentMonth === 3 || this.currentMonth === 5 || this.currentMonth === 7 || this.currentMonth === 8 || this.currentMonth === 10 || this.currentMonth === 12){
                 return 31;
             } else if (this.currentMonth === 2) {
-               return 28;
+                /// Is it a leap year?
+                /// Leap years are divisible by 4 but not by 100, unless they are also divisible by 400.
+                /// E.g., 2000 is divisible by 4 (maybe it is), and by 100 (maybe it isn't), but also by 400 (yes it is); so it is a leap year.
+                if (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) {
+                    return 29;
+                } else {
+                    return 28;
+                }
             } else {return 30; }
         }
-        
     };
 
     //create calendar object
@@ -58,11 +54,9 @@
         go: function(){
             var b             = document.getElementById("myBody"),
                 monthTitle    = document.createElement("h1"),
-                monthTextNode = document.createTextNode(monthObj.name),        
+                monthTextNode = document.createTextNode(monthObj.getName(monthObj.currentMonth)),        
                 table         = document.createElement("table"),
                 day           = 1,
-                dayCell       = document.createElement("td"),
-                dayTextNode   = document.createTextNode(day),
                 i             = 0,
                 j             = 0;
 
@@ -77,25 +71,33 @@
                 var currentWeekRow = document.createElement("tr");
                 table.appendChild(currentWeekRow);
 
-                if (monthObj.currentMonth === 1 || monthObj.currentMonth === 3 || monthObj.currentMonth === 5 || monthObj.currentMonth === 7 || monthObj.currentMonth === 8 || monthObj.currentMonth === 10 || monthObj.currentMonth === 12){
+                if (monthObj.getDaysInMonth() === 31){
                     for (j = 0; j <= 7; ++j){
+                    
+                        var dayCell     = document.createElement("td"),
+                            dayTextNode = document.createTextNode(day);
+                        
                         ++day;
-                        dayCell.appendChild(dayTextNode);
+                        dayCell.textContent = day;
                         currentWeekRow.appendChild(dayCell); 
                     }
-                } else if (monthObj.currentMonth === 2){
-                    for (this.j = 0; this.j <= 7; ++j){
+                } else if (monthObj.getDaysInMonth === 28){
+                    for (j = 0; j <= 7; ++j){
                         if (day <= 28){
+                        var dayCell     = document.createElement("td"),
+                            dayTextNode = document.createTextNode(day);
                             ++day;
-                            dayCell.appendChild(dayTextNode);
+                            dayCell.textContent = day;
                             currentWeekRow.appendChild(dayCell);
                         }
                     }
                 } else {
-                    for (this.j = 0; this.j <= 7; ++j){
+                    for (j = 0; j <= 7; ++j){
                         if (day <= 30){
+                        var dayCell     = document.createElement("td"),
+                            dayTextNode = document.createTextNode(day);
                             ++day;
-                            dayCell.appendChild(dayTextNode);
+                            dayCell.textContent = day;
                             currentWeekRow.appendChild(dayCell); 
                         }
                     }
