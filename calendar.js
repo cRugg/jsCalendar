@@ -9,6 +9,7 @@
         currentMonth: dateObj.getMonth() + 1, // In getMonth() January === 0. To stay sane I add 1
         
         //name: returns the result of the getName: function (Well, it's supposed to.)
+        /// Is there a reason to have this function and getName()?
         name: function()
         {
             return this.getName(this.currentMonth);
@@ -82,10 +83,13 @@
             b.appendChild(table);
 
             //Loops through how many days there are in the current month and appends td tags and text nodes to create what looks like a calendar
+            /// Why 4? Is that for each week? Did you know that you can have up to parts of 6 weeks in a month? Consider December 2000.
             for (i = 0; i < 4; ++i){
                 var currentWeekRow = document.createElement("tr");
                 table.appendChild(currentWeekRow);
-
+                
+                /// What's up with this part?
+                /// Why not use .getDaysInMonth()?
                 if (monthObj.currentMonth === 1 || monthObj.currentMonth === 3 || monthObj.currentMonth === 5 || monthObj.currentMonth === 7 || monthObj.currentMonth === 8 || monthObj.currentMonth === 10 || monthObj.currentMonth === 12){
                     for (j = 0; j <= 7; ++j){
                         ++day;
