@@ -40,10 +40,19 @@
         //getDaysInMonth: returns the amount of days in the current month
         getDaysInMonth: function()
         {
+            var year = dateObj.getFullYear();
+            
             if (this.currentMonth === 1 || this.currentMonth === 3 || this.currentMonth === 5 || this.currentMonth === 7 || this.currentMonth === 8 || this.currentMonth === 10 || this.currentMonth === 12){
                 return 31;
             } else if (this.currentMonth === 2) {
-               return 28;
+                /// Is it a leap year?
+                /// Leap years are divisible by 4 but not by 100, unless they are also divisible by 400.
+                /// E.g., 2000 is divisible by 4 (maybe it is), and by 100 (maybe it isn't), but also by 400 (yes it is); so it is a leap year.
+                if (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) {
+                    return 29;
+                } else {
+                    return 28;
+                }
             } else {return 30; }
         }
         
