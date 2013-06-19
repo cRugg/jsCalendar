@@ -89,6 +89,12 @@
                 if (monthObj.currentMonth === 1 || monthObj.currentMonth === 3 || monthObj.currentMonth === 5 || monthObj.currentMonth === 7 || monthObj.currentMonth === 8 || monthObj.currentMonth === 10 || monthObj.currentMonth === 12){
                     for (j = 0; j <= 7; ++j){
                         ++day;
+                        /// So, I'm guessing the main problem is with this part.
+                        /// You can't append the same element twice.
+                        /// You need to create a new element each time.
+                        /// Also, there's no need to mess with text nodes.
+                        /// Just use DOM_ELEMENT.textContent = day;
+                        /// It's the same as innerHTML except that it automatically escapes any HTML. So it's safe to use.
                         dayCell.appendChild(dayTextNode);
                         currentWeekRow.appendChild(dayCell); 
                     }
