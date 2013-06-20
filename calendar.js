@@ -1,7 +1,13 @@
 (function(){
 "use strict";
 
-    var dateObj  =  new Date(); // dateObj contains the current month in number form
+    ///The formula: N = d + 2m + [3(m+1)/5] + y + [y/4] - [y/100] + [y/400] + 2
+
+    var dateObj =  new Date(); // dateObj contains the current month in number form
+    
+    var dayObj = {
+    currentDay:  dateObj.getDate(),
+    };
     
     //create a month object; monthObj should have .name and .daysInMonth defined
     var monthObj = {
@@ -47,64 +53,45 @@
 
     //create calendar object
     var calendar = {
-        
-        currentDay:  dateObj.getDate(),
+
         currentYear: dateObj.getFullYear(),
         
-        go: function(){
+        init: function(){
             var b             = document.getElementById("myBody"),
-                monthTitle    = document.createElement("h1"),
-                monthTextNode = document.createTextNode(monthObj.getName(monthObj.currentMonth)),        
+                monthTitle    = document.getElementById("monthTitle"),
                 table         = document.createElement("table"),
                 day           = 1,
-                i             = 0,
-                j             = 0;
-
-            table.setAttribute('border', '1');   
-            monthTitle.appendChild(monthTextNode);
-            
-            b.appendChild(monthTitle);
+                calArr        = [[],[],[],[],[],[],[]];
+                
+            //table.setAttribute('border', '1');   
+            monthTitle.textContent = monthObj.getName(monthObj.currentMonth);
             b.appendChild(table);
 
-            //Loops through how many days there are in the current month and appends td tags and text nodes to create what looks like a calendar
-            for (i = 0; i < 4; ++i){
+            //Loops through and creates a 6x7 table for maximum amount of weeks
+            for (var i = 0; i < 6; ++i){
                 var currentWeekRow = document.createElement("tr");
                 table.appendChild(currentWeekRow);
-
-                if (monthObj.getDaysInMonth() === 31){
-                    for (j = 0; j <= 7; ++j){
-                    
-                        var dayCell     = document.createElement("td"),
-                            dayTextNode = document.createTextNode(day);
-                        
-                        ++day;
-                        dayCell.textContent = day;
-                        currentWeekRow.appendChild(dayCell); 
-                    }
-                } else if (monthObj.getDaysInMonth === 28){
-                    for (j = 0; j <= 7; ++j){
-                        if (day <= 28){
-                        var dayCell     = document.createElement("td"),
-                            dayTextNode = document.createTextNode(day);
-                            ++day;
-                            dayCell.textContent = day;
-                            currentWeekRow.appendChild(dayCell);
-                        }
-                    }
-                } else {
-                    for (j = 0; j <= 7; ++j){
-                        if (day <= 30){
-                        var dayCell     = document.createElement("td"),
-                            dayTextNode = document.createTextNode(day);
-                            ++day;
-                            dayCell.textContent = day;
-                            currentWeekRow.appendChild(dayCell); 
-                        }
-                    }
+                for (var j = 0; j < 7; ++j){
+                    var dayCell  = document.createElement("td");
+                    calArr[i][j] = dayCell;
+                    currentWeekRow.appendChild(calArr[i][j]); 
                 }
             }
-        }
+        }        
     };
+    
+/***** Calculates the current day of the week after %ing the result by 7. if Janurary or February add 12 to the month and subtract the year by 1.
+********* Saturday === 0, Sunday === 1, Monday === 2, Tuesday === 3, Wednesday === 4, Thursday === 5, Friday === 6********
 
-    calendar.go();
+    var N = null,
+        d = dayObj.currentDay,
+        m = monthObj.currentMonth,
+        y = calendar.currentYear;
+        
+    N = d + (2*m) + Math.floor((3*(m+1)/5)) + y + Math.floor((y/4)) - Math.floor((y/100)) + Math.floor((y/400)) + 2;
+    
+   console.log(N%7);
+*******/
+
+    calendar.init();
 }());
