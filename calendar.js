@@ -6,7 +6,7 @@
     var dateObj =  new Date(); // dateObj contains the current month in number form
     
     var dayObj = {
-    currentDay:  dateObj.getDate(),
+        currentDay:  dateObj.getDate(),
     };
     
     //create a month object; monthObj should have .name and .daysInMonth defined
@@ -48,6 +48,22 @@
                     return 28;
                 }
             } else {return 30; }
+        },
+        
+        getFirstDayOfMonth: function(month, year)
+        {
+            var N = null,
+                d = 1,
+                m = month,
+                y = year;
+            
+            N = d + (2*m) + Math.floor((3*(m+1)/5)) + y + Math.floor((y/4)) - Math.floor((y/100)) + Math.floor((y/400)) + 2;
+            
+            if (N%7 === 0){
+               return N = 6;
+            } else {
+               return N - 1;
+            }
         }
     };
 
@@ -55,15 +71,14 @@
     var calendar = {
 
         currentYear: dateObj.getFullYear(),
+        calArr:      [[],[],[],[],[],[],[]],
         
-        init: function(){
-            var b             = document.getElementById("myBody"),
-                monthTitle    = document.getElementById("monthTitle"),
-                table         = document.createElement("table"),
-                day           = 1,
-                calArr        = [[],[],[],[],[],[],[]];
-                
-            //table.setAttribute('border', '1');   
+        init: function()
+        {
+            var b          = document.getElementById("myBody"),
+                monthTitle = document.getElementById("monthTitle"),
+                table      = document.createElement("table");
+
             monthTitle.textContent = monthObj.getName(monthObj.currentMonth);
             b.appendChild(table);
 
@@ -73,11 +88,30 @@
                 table.appendChild(currentWeekRow);
                 for (var j = 0; j < 7; ++j){
                     var dayCell  = document.createElement("td");
-                    calArr[i][j] = dayCell;
-                    currentWeekRow.appendChild(calArr[i][j]); 
+                    this.calArr[i][j] = dayCell;
+                    currentWeekRow.appendChild(this.calArr[i][j]); 
                 }
             }
-        }        
+        },
+        
+        setDates: function(month, year)
+        {
+            var startDay = monthObj.getFirstDayOfMonth(month, year),
+                day = 1;
+            for (var i = 0; i < 6; ++i){
+                for (var j = 0; j < 7; ++j){
+                    if (i === 0 && j === 0){
+                        j = startDay;
+                        this.calArr[i][j].textContent = day;
+                        ++day;
+                        
+                    } else if (day <= monthObj.getDaysInMonth()){
+                        this.calArr[i][j].textContent = day;
+                        ++day;
+                    }
+                }
+            }
+        }
     };
     
 /***** Calculates the current day of the week after %ing the result by 7. if Janurary or February add 12 to the month and subtract the year by 1.
@@ -94,4 +128,5 @@
 *******/
 
     calendar.init();
+    calendar.setDates(monthObj.currentMonth, calendar.currentYear);
 }());
