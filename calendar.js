@@ -84,15 +84,14 @@
         displayedMonth: monthObj.currentMonth,
         displayedYear:  dateObj.getFullYear(),
 
-        monthTitle: document.getElementById("monthTitle"),
-        yearTitle:  document.getElementById("yearTitle"),
+        monthAndYearContainer: document.getElementById("monthAndYearContainer"),
         
         init: function()
         {
             var b     = document.getElementById("myBody"),
                 table = document.createElement("table");
            
-            this.monthTitle.textContent = monthObj.getName(monthObj.currentMonth);
+            this.monthAndYearContainer.textContent = monthObj.getName(monthObj.currentMonth) + " " + this.currentYear;
             b.appendChild(table);
 
             //Loops through and creates a 6x7 table for maximum amount of weeks
@@ -111,8 +110,7 @@
         {
             var startDay = monthObj.getFirstDayOfMonth(month, year),
                 day      = 1;
-            c.monthTitle.textContent = monthObj.getName(month);
-            c.yearTitle.textContent  = c.displayedYear;
+            c.monthAndYearContainer.textContent = monthObj.getName(month) + " " + this.displayedYear;
             
             //clear the previous months dates
             for(var i = 0; i < 6; ++i){
