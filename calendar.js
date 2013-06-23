@@ -32,7 +32,7 @@
        //getDaysInMonth: returns the amount of days in the current month
         getDaysInMonth: function(c)
         {
-            var year = dateObj.getFullYear();
+            var year = c.displayedYear;
             
             if (c.displayedMonth === 1 || c.displayedMonth === 3 || c.displayedMonth === 5 || c.displayedMonth === 7 || c.displayedMonth === 8 || c.displayedMonth === 10 || c.displayedMonth === 12){
                 return 31;
