@@ -6,17 +6,23 @@
 	<title>jsCalendar</title>
 </head>
 <body id="myBody">
-<h1 id = "monthTitle"></h1>
-<table>
-	<tr>
-		<td class = "weekDays">Sun</td>
-		<td class = "weekDays">Mon</td>
-		<td class = "weekDays">Tue</td>
-		<td class = "weekDays">Wed</td>
-		<td class = "weekDays">Thu</td>
-		<td class = "weekDays">Fri</td>
-		<td class = "weekDays">Sat</td>
-	</tr>
+	<div id ="centerButtons">
+		<div id = "prevArrow" onClick="calendar.prevMonth()"></div>
+		<div id = "monthTitle"></div>
+		<div id = "yearTitle">2013</div>	
+		<div id = "nextArrow" onClick = "calendar.nextMonth()"></div>
+	</div>
+
+	<table>
+		<tr>
+			<td class = "weekDays">Sun</td>
+			<td class = "weekDays">Mon</td>
+			<td class = "weekDays">Tue</td>
+			<td class = "weekDays">Wed</td>
+			<td class = "weekDays">Thu</td>
+			<td class = "weekDays">Fri</td>
+			<td class = "weekDays">Sat</td>
+		</tr>
 </table>
 </body>
 <script src="calendar.js"></script>

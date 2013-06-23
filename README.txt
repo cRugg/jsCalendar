@@ -1,0 +1,1 @@
+jsCalendar is a calendar web application made with JavaScript, HTML, CSS, and a little bit of love. Right now, it's probably not as good as the little calendar on your desktop or even the one hanging on your wall, but one day it might develope into something special. BELIEVE IN YOURSELF.
