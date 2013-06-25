@@ -2,17 +2,17 @@
 "use strict";
 
     var dateObj =  new Date(); // dateObj contains the current month in number form
-    
-    var dayObj = {
-        currentDay:  dateObj.getDate(),
-    };
 
-    //create a month object; monthObj should have .name and .daysInMonth defined
-    var monthObj = {
-    
+    var model = {
+        currentDay:   dateObj.getDate(),
         currentMonth: dateObj.getMonth() + 1, // In getMonth() January === 0. To stay sane I add 1
+        currentYear:  dateObj.getFullYear(),
+        
+        calArr: [[],[],[],[],[],[],[]],
+        
+        displayedMonth: monthObj.currentMonth,
+        displayedYear:  dateObj.getFullYear(),
 
-        //getName: goes through the if statements and returns a string of the name of the current month
         getName: function(currentMonthNumber)
         {
             if (currentMonthNumber === 1)  {return "January"}
@@ -28,8 +28,7 @@
             if (currentMonthNumber === 11) {return "November"}
             if (currentMonthNumber === 12) {return "December"}
         },
-
-       //getDaysInMonth: returns the amount of days in the current month
+        
         getDaysInMonth: function(c)
         {
             var year = c.displayedYear;
@@ -74,27 +73,20 @@
                 return N%7 - 1;
             }
         }
+        
     };
 
-    //create calendar object
-    var calendar = {
-
-        currentYear:    dateObj.getFullYear(),
-        calArr:         [[],[],[],[],[],[],[]],
-        displayedMonth: monthObj.currentMonth,
-        displayedYear:  dateObj.getFullYear(),
-
+    var view = {
         monthAndYearContainer: document.getElementById("monthAndYearContainer"),
-        
-        init: function()
-        {
-            var b     = document.getElementById("myBody"),
-                table = document.createElement("table");
+        b:                     document.getElementById("myBody"),
+        table:                 document.createElement("table");
            
-            this.monthAndYearContainer.textContent = monthObj.getName(monthObj.currentMonth) + " " + this.currentYear;
-            b.appendChild(table);
-
-            //Loops through and creates a 6x7 table for maximum amount of weeks
+        this.monthAndYearContainer.textContent = monthObj.getName(monthObj.currentMonth) + " " + this.currentYear;
+        b.appendChild(table);
+            
+        createTable: function()
+        {
+             //Loops through and creates a 6x7 table for maximum amount of weeks
             for (var i = 0; i < 6; ++i){
                 var currentWeekRow = document.createElement("tr");
                 table.appendChild(currentWeekRow);
@@ -105,11 +97,12 @@
                 }
             }
         },
-        
+            
         setDates: function(month, year, c)
         {
             var startDay = monthObj.getFirstDayOfMonth(month, year),
                 day      = 1;
+                
             c.monthAndYearContainer.textContent = monthObj.getName(month) + " " + this.displayedYear;
             
             //clear the previous months dates
@@ -131,32 +124,31 @@
                     }
                 }
             }
-        }    
+        }      
     };
     
-    var prevDiv = document.getElementById("prevArrow"),
-        nextDiv = document.getElementById("nextArrow");
-    //Is there a better place / way to do the onclick stuff?
-    prevDiv.onclick = function(){
-        if (calendar.displayedMonth === 1){
-            calendar.displayedMonth = 12;
-            calendar.displayedYear -= 1; 
-        }else {
-           calendar.displayedMonth -= 1;
+    var controller = {
+        prevDiv: document.getElementById("prevArrow"),
+        nextDiv: document.getElementById("nextArrow"),
+        
+        prevDiv.onclick = function(){
+            if (calendar.displayedMonth === 1){
+                calendar.displayedMonth = 12;
+                calendar.displayedYear -= 1; 
+            }else {
+               calendar.displayedMonth -= 1;
+            }
+            calendar.setDates(calendar.displayedMonth, calendar.displayedYear, calendar);
+        },
+        
+        nextDiv.onclick = function(){
+            if (calendar.displayedMonth === 12){
+                calendar.displayedMonth = 1;
+                calendar.displayedYear += 1;
+            }else {
+                calendar.displayedMonth += 1;
+            }
+            calendar.setDates(calendar.displayedMonth, calendar.displayedYear, calendar);
         }
-        calendar.setDates(calendar.displayedMonth, calendar.displayedYear, calendar);
     };
-    
-    nextDiv.onclick = function(){
-        if (calendar.displayedMonth === 12){
-            calendar.displayedMonth = 1;
-            calendar.displayedYear += 1;
-        }else {
-            calendar.displayedMonth += 1;
-        }
-        calendar.setDates(calendar.displayedMonth, calendar.displayedYear, calendar);
-    };
-
-    calendar.init();
-    calendar.setDates(monthObj.currentMonth, calendar.currentYear, calendar);
 }());
