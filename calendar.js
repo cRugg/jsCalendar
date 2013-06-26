@@ -1,45 +1,63 @@
 (function(){
 "use strict";
 
-    var dateObj = new Date(); // dateObj contains the current month in number form
+    var dateObj =  new Date(); // dateObj contains the current month in number form
     
-    var dayObj = {
-        currentDay: dateObj.getDate(),
-    };
-
-    //create a month object; monthObj should have .name and .daysInMonth defined
-    var monthObj = {
-    
+    var model = {
+        currentDay:   dateObj.getDate(),
         currentMonth: dateObj.getMonth() + 1, // In getMonth() January === 0. To stay sane I add 1
+        currentYear:  dateObj.getFullYear(),
+        
+        calArr: [[],[],[],[],[],[],[]],
+        
+        displayedMonth: dateObj.getMonth() + 1,
+        displayedYear:  dateObj.getFullYear(),        
+        
+        prevMonth: function(){
+            if (model.displayedMonth === 1){
+                model.displayedMonth = 12;
+                model.displayedYear -= 1; 
+            }else {
+               model.displayedMonth -= 1;
+            }
+            view.setDates(model.displayedMonth, model.displayedYear);
+        },
+        
+        nextMonth: function(){
+            if (model.displayedMonth === 12){
+                model.displayedMonth = 1;
+                model.displayedYear += 1; 
+            }else {
+               model.displayedMonth += 1;
+            }
+            console.log("displayedMonth: " + model.displayedMonth);
+            view.setDates(model.displayedMonth, model.displayedYear);
+        },
 
-        //getName: goes through the if statements and returns a string of the name of the current month
         getName: function(currentMonthNumber)
         {
-            if (currentMonthNumber === 1) {return "January"}
-            if (currentMonthNumber === 2) {return "February"}
-            if (currentMonthNumber === 3) {return "March"}
-            if (currentMonthNumber === 4) {return "April"}
-            if (currentMonthNumber === 5) {return "May"}
-            if (currentMonthNumber === 6) {return "June"}
-            if (currentMonthNumber === 7) {return "July"}
-            if (currentMonthNumber === 8) {return "August"}
-            if (currentMonthNumber === 9) {return "September"}
+            if (currentMonthNumber === 1)  {return "January"}
+            if (currentMonthNumber === 2)  {return "February"}
+            if (currentMonthNumber === 3)  {return "March"}
+            if (currentMonthNumber === 4)  {return "April"}
+            if (currentMonthNumber === 5)  {return "May"}
+            if (currentMonthNumber === 6)  {return "June"}
+            if (currentMonthNumber === 7)  {return "July"}
+            if (currentMonthNumber === 8)  {return "August"}
+            if (currentMonthNumber === 9)  {return "September"}
             if (currentMonthNumber === 10) {return "October"}
             if (currentMonthNumber === 11) {return "November"}
             if (currentMonthNumber === 12) {return "December"}
         },
-
-       //getDaysInMonth: returns the amount of days in the current month
-        getDaysInMonth: function(c)
+        
+        getDaysInMonth: function()
         {
-            var year = c.displayedYear;
+            var year = model.displayedYear;
             
-            if (c.displayedMonth === 1 || c.displayedMonth === 3 || c.displayedMonth === 5 || c.displayedMonth === 7 || c.displayedMonth === 8 || c.displayedMonth === 10 || c.displayedMonth === 12){
+            if (model.displayedMonth === 1 || model.displayedMonth === 3 || model.displayedMonth === 5 || model.displayedMonth === 7 || model.displayedMonth === 8 || model.displayedMonth === 10 || model.displayedMonth === 12){
                 return 31;
-            } else if (c.displayedMonth === 2) {
+            } else if (model.displayedMonth === 2) {
                 /// Is it a leap year?
-                /// Leap years are divisible by 4 but not by 100, unless they are also divisible by 400.
-                /// E.g., 2000 is divisible by 4 (maybe it is), and by 100 (maybe it isn't), but also by 400 (yes it is); so it is a leap year.
                 if (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) {
                     return 29;
                 } else {
@@ -73,60 +91,51 @@
             } else {
                 return N%7 - 1;
             }
-        }
+        }              
     };
 
-    //create calendar object
-    var calendar = {
-
-        currentYear: dateObj.getFullYear(),
-        calArr: [[],[],[],[],[],[],[]],
-        displayedMonth: monthObj.currentMonth,
-        displayedYear: dateObj.getFullYear(),
-
+    var view = {
         monthAndYearContainer: document.getElementById("monthAndYearContainer"),
-        
-        init: function()
+        b:                     document.getElementById("myBody"),
+        table:                 document.getElementById("calendarTable"),
+            
+        createTable: function()
         {
-            var b = document.getElementById("myBody"),
-                table = document.createElement("table");
-           
-            this.monthAndYearContainer.textContent = monthObj.getName(monthObj.currentMonth) + " " + this.currentYear;
-            b.appendChild(table);
-
-            //Loops through and creates a 6x7 table for maximum amount of weeks
+            //Loops through and creates a 6x7 table for maximum amount of weeks and puts the td elements into the calArr[][]
             for (var i = 0; i < 6; ++i){
                 var currentWeekRow = document.createElement("tr");
-                table.appendChild(currentWeekRow);
+                this.table.appendChild(currentWeekRow);
                 for (var j = 0; j < 7; ++j){
                     var dayCell = document.createElement("td");
-                    this.calArr[i][j] = dayCell;
-                    currentWeekRow.appendChild(this.calArr[i][j]);
+                    model.calArr[i][j] = dayCell;
+                    currentWeekRow.appendChild(model.calArr[i][j]); 
                 }
             }
         },
-        
-        setDates: function(month, year, c)
+            
+        setDates: function(month, year)
         {
-            var startDay = monthObj.getFirstDayOfMonth(month, year),
-                day = 1;
-            c.monthAndYearContainer.textContent = monthObj.getName(month) + " " + this.displayedYear;
+            var startDay = model.getFirstDayOfMonth(month, year),
+                day      = 1;
+                
+            this.monthAndYearContainer.textContent = model.getName(month) + " " + model.displayedYear;
             
             //clear the previous months dates
             for(var i = 0; i < 6; ++i){
                 for(var j = 0; j < 7; ++j){
-                    c.calArr[i][j].textContent = null;
+                    model.calArr[i][j].textContent = null;
                 }
             }
    
             for (var i = 0; i < 6; ++i){
                 for (var j = 0; j < 7; ++j){
                     if (i === 0 && j === 0){
+                        //this makes it so the loop starts on the correct day of the week;
                         j = startDay;
-                        c.calArr[i][j].textContent = day;
+                        model.calArr[i][j].textContent = day;
                         ++day;
-                    } else if (day <= monthObj.getDaysInMonth(this)){
-                        c.calArr[i][j].textContent = day;
+                    } else if (day <= model.getDaysInMonth(model)){
+                        model.calArr[i][j].textContent = day;
                         ++day;
                     }
                 }
@@ -134,29 +143,18 @@
         }
     };
     
-    var prevDiv = document.getElementById("prevArrow"),
-        nextDiv = document.getElementById("nextArrow");
-    //Is there a better place / way to do the onclick stuff?
-    prevDiv.onclick = function(){
-        if (calendar.displayedMonth === 1){
-            calendar.displayedMonth = 12;
-            calendar.displayedYear -= 1;
-        }else {
-           calendar.displayedMonth -= 1;
+    var controller = {
+        prevDiv: document.getElementById("prevArrow"),
+        nextDiv: document.getElementById("nextArrow"),
+        
+        init: function(){
+            view.createTable();
+            view.setDates(model.currentMonth, model.currentYear);
+            
+            this.prevDiv.onclick = model.prevMonth;
+            this.nextDiv.onclick = model.nextMonth;
         }
-        calendar.setDates(calendar.displayedMonth, calendar.displayedYear, calendar);
-    };
-    
-    nextDiv.onclick = function(){
-        if (calendar.displayedMonth === 12){
-            calendar.displayedMonth = 1;
-            calendar.displayedYear += 1;
-        }else {
-            calendar.displayedMonth += 1;
-        }
-        calendar.setDates(calendar.displayedMonth, calendar.displayedYear, calendar);
     };
 
-    calendar.init();
-    calendar.setDates(monthObj.currentMonth, calendar.currentYear, calendar);
+    controller.init();  
 }());
