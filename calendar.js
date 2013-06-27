@@ -30,7 +30,6 @@
             }else {
                model.displayedMonth += 1;
             }
-            console.log("displayedMonth: " + model.displayedMonth);
             view.setDates(model.displayedMonth, model.displayedYear);
         },
 

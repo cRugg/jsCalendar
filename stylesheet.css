@@ -1,4 +1,3 @@
-
 body
 {
 	background-color: #0C3E5E;
@@ -7,12 +6,14 @@ body
 table
 {
 	background-color: #015775;
-	border-color: #DDDDDD;
-	border: 1px;
+	border: 1px solid black;
 	margin-left: auto;
 	margin-right: auto;
 }
-
+#weekdaysTable
+{
+	background-color:   #590A1D;
+}
 td
 {
 	color: #CCCCCC;
@@ -26,9 +27,15 @@ td
 .weekDays
 {
 	height: 20px;
+	border: 1px none white;
+	padding: 2px;
 }
 #centerButtons
 {
+	-moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+	-ms-user-select: none;
 	color: #CCCCCC;
 	width: 150px;
 	height: 20px;
