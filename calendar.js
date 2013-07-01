@@ -30,7 +30,6 @@
             }else {
                model.displayedMonth += 1;
             }
-            console.log("displayedMonth: " + model.displayedMonth);
             view.setDates(model.displayedMonth, model.displayedYear);
         },
 
@@ -81,7 +80,7 @@
                 m = 14;
                 y -= 1;
             }
-            
+
             N = d + (2*m) + Math.floor((3*(m+1)/5)) + y + Math.floor((y/4)) - Math.floor((y/100)) + Math.floor((y/400)) + 2;
             
             //Sunday is now 0, Mon === 1, ect. Saturday === 6; Makes the setDates function cleaner
@@ -92,8 +91,6 @@
                 return N%7 - 1;
             }
         }
-        
-               
     };
 
     var view = {
@@ -120,7 +117,7 @@
             var startDay = model.getFirstDayOfMonth(month, year),
                 day      = 1;
                 
-            this.monthAndYearContainer.textContent = model.getName(month) + " " + model.displayedYear;
+            this.monthAndYearContainer.textContent = model.getName(month) + " " + year;
             
             //clear the previous months dates
             for(var i = 0; i < 6; ++i){
@@ -148,17 +145,20 @@
     var controller = {
         prevDiv: document.getElementById("prevArrow"),
         nextDiv: document.getElementById("nextArrow"),
+        submitButton: document.getElementById("submitButton"),
         
         init: function(){
             view.createTable();
             view.setDates(model.currentMonth, model.currentYear);
             
-            this.prevDiv.onclick = model.prevMonth;
-            this.nextDiv.onclick = model.nextMonth;
+            this.prevDiv.addEventListener("click", model.prevMonth, false);
+            this.nextDiv.addEventListener("click", model.nextMonth, false);
+            this.submitButton.addEventListener("click", controller.handleSubmit, false);
+            
+        },
+        handleSubmit: function(){
+            view.setDates(parseInt(document.monthYearForm.month.value), parseInt(document.monthYearForm.year.value));
         }
     };
-    
-    
-    controller.init();
-        
+    controller.init();  
 }());
