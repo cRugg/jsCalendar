@@ -157,6 +157,8 @@
             
         },
         handleSubmit: function(){
+            model.displayedMonth = parseInt(document.monthYearForm.month.value);
+            model.displayedYear  = parseInt(document.monthYearForm.year.value)
             view.setDates(parseInt(document.monthYearForm.month.value), parseInt(document.monthYearForm.year.value));
         }
     };
