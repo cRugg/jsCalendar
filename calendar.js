@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 
-    var dateObj =  new Date(); // dateObj contains the current month in number form
+    var dateObj = new Date(); // dateObj contains the current month in number form
     
     var model = {
         currentDay:   dateObj.getDate(),
@@ -12,6 +12,10 @@
         
         displayedMonth: dateObj.getMonth() + 1,
         displayedYear:  dateObj.getFullYear(),        
+        
+        selectedCell:      null,
+        newlySelectedCell: null,
+        selectedDate:      null,
         
         prevMonth: function(){
             if (model.displayedMonth === 1){
@@ -90,6 +94,64 @@
             } else {
                 return N%7 - 1;
             }
+        },
+        
+        selectCurrentDay: function()
+        {
+            for(var i = 0; i < 6; ++i){
+                for(var j = 0; j < 7; ++j){
+                    if (parseInt(model.calArr[i][j].textContent) === model.currentDay){
+                        model.selectedCell = model.calArr[i][j];
+                        view.highlightSelectedDay();
+                    }
+                }
+            }
+        },
+        
+        updateCSS: function(){
+            model.selectedCell.className = "";
+            model.selectedCell = model.newlySelectedCell;
+            view.highlightSelectedDay();
+        },
+        
+        leftArrowPressed: function(){
+            if (!model.selectedCell.previousSibling){
+                model.newlySelectedCell = model.selectedCell.parentNode.lastChild;
+                model.updateCSS();
+            }else{
+                model.newlySelectedCell = model.selectedCell.previousSibling;
+                model.updateCSS();
+            }
+        },
+        
+        upArrowPressed: function(){
+            if (!model.selectedCell.parentNode.previousSibling){
+                model.newlySelectedCell = model.selectedCell.parentNode.parentNode.lastChild.childNodes[model.selectedCell.cellIndex];
+                model.updateCSS();
+            }else{
+                model.newlySelectedCell = model.selectedCell.parentNode.previousSibling.childNodes[model.selectedCell.cellIndex];
+                model.updateCSS();
+            }
+        },
+        
+        downArrowPressed: function(){
+            if (!model.selectedCell.parentNode.nextSibling){
+                model.newlySelectedCell = model.selectedCell.parentNode.parentNode.firstChild.childNodes[model.selectedCell.cellIndex];
+                model.updateCSS();
+            }else{
+                model.newlySelectedCell = model.selectedCell.parentNode.nextSibling.childNodes[model.selectedCell.cellIndex];
+                model.updateCSS();
+            }
+        },
+        
+        rightArrowPressed: function(){
+            if (!model.selectedCell.nextSibling){
+                model.newlySelectedCell = model.selectedCell.parentNode.firstChild;
+                model.updateCSS();
+            }else{
+                model.newlySelectedCell = model.selectedCell.nextSibling;
+                model.updateCSS();
+            }
         }
     };
 
@@ -106,6 +168,7 @@
                 this.table.appendChild(currentWeekRow);
                 for (var j = 0; j < 7; ++j){
                     var dayCell = document.createElement("td");
+                    dayCell.addEventListener("mousedown", controller.handleClick, false);
                     model.calArr[i][j] = dayCell;
                     currentWeekRow.appendChild(model.calArr[i][j]); 
                 }
@@ -139,6 +202,10 @@
                     }
                 }
             }
+        },
+        
+        highlightSelectedDay: function(){
+            model.selectedCell.className = "selected";
         }
     };
     
@@ -146,21 +213,53 @@
         prevDiv: document.getElementById("prevArrow"),
         nextDiv: document.getElementById("nextArrow"),
         submitButton: document.getElementById("submitButton"),
+        body: document.getElementById("myBody"),
         
         init: function(){
             view.createTable();
             view.setDates(model.currentMonth, model.currentYear);
             
+            model.selectCurrentDay();
+            
+            this.body.addEventListener("keydown", controller.handleArrowKeys, false);
+
             this.prevDiv.addEventListener("click", model.prevMonth, false);
             this.nextDiv.addEventListener("click", model.nextMonth, false);
             this.submitButton.addEventListener("click", controller.handleSubmit, false);
-            
         },
         handleSubmit: function(){
             model.displayedMonth = parseInt(document.monthYearForm.month.value);
             model.displayedYear  = parseInt(document.monthYearForm.year.value)
             view.setDates(parseInt(document.monthYearForm.month.value), parseInt(document.monthYearForm.year.value));
+        },
+        
+        handleClick: function(){
+            model.newlySelectedCell = this;
+            model.updateCSS();
+        },
+        
+        handleArrowKeys: function(e)
+        {
+            //left
+            if (e.keyCode === 37){
+                model.leftArrowPressed();
+            }
+            //up
+            if (e.keyCode === 38){
+                model.upArrowPressed();
+            }
+            //down
+            if (e.keyCode === 40){
+                model.downArrowPressed();
+            }
+            //right
+            if (e.keyCode === 39){
+                model.rightArrowPressed();
+            }
         }
+        
     };
+    
+    
     controller.init();  
 }());

@@ -6,6 +6,10 @@ body
 
 table
 {
+	-moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+	-ms-user-select: none;
 	background-color: #015775;
 	border: 1px solid black;
 	margin-left: auto;
@@ -17,6 +21,10 @@ table
 }
 td
 {
+	-moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+	-ms-user-select: none;
 	color: #CCCCCC;
 	text-align: center;
 	vertical-align: top;
@@ -70,4 +78,8 @@ td
 	border-bottom-color: #0C3E5E;
 	border-left:   12px solid;
 	background:#FFF;
+}
+.selected
+{
+	border-color: #FFFFFF;
 }
