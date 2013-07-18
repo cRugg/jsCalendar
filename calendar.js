@@ -8,16 +8,18 @@
         currentMonth: dateObj.getMonth() + 1, // In getMonth() January === 0. To stay sane I add 1
         currentYear:  dateObj.getFullYear(),
         
-        calArr: [[],[],[],[],[],[],[]],
-        
+        calArr: [[],[],[],[],[],[]],
+    
         displayedMonth: dateObj.getMonth() + 1,
-        displayedYear:  dateObj.getFullYear(),        
-        
+        displayedYear:  dateObj.getFullYear(),  
+
         selectedCell:      null,
         newlySelectedCell: null,
-        selectedDate:      null,
+        selectedRow:       null,
+        selectedColumn:    null,
         
-        prevMonth: function(){
+        prevMonth: function()
+        {
             if (model.displayedMonth === 1){
                 model.displayedMonth = 12;
                 model.displayedYear -= 1; 
@@ -27,7 +29,8 @@
             view.setDates(model.displayedMonth, model.displayedYear);
         },
         
-        nextMonth: function(){
+        nextMonth: function()
+        {
             if (model.displayedMonth === 12){
                 model.displayedMonth = 1;
                 model.displayedYear += 1; 
@@ -102,54 +105,67 @@
                 for(var j = 0; j < 7; ++j){
                     if (parseInt(model.calArr[i][j].textContent) === model.currentDay){
                         model.selectedCell = model.calArr[i][j];
+                        model.selectedRow = i;
+                        model.selectedColumn = j;
                         view.highlightSelectedDay();
                     }
                 }
             }
         },
         
-        updateCSS: function(){
+        updateCSS: function()
+        {
             model.selectedCell.className = "";
             model.selectedCell = model.newlySelectedCell;
             view.highlightSelectedDay();
         },
         
-        leftArrowPressed: function(){
-            if (!model.selectedCell.previousSibling){
-                model.newlySelectedCell = model.selectedCell.parentNode.lastChild;
+        leftArrowPressed: function()
+        {
+            if (model.selectedColumn === 0){
+                model.selectedColumn = 7;
+                model.newlySelectedCell = model.calArr[model.selectedRow][model.selectedColumn -= 1];
                 model.updateCSS();
             }else{
-                model.newlySelectedCell = model.selectedCell.previousSibling;
+                model.newlySelectedCell = model.calArr[model.selectedRow][model.selectedColumn -= 1];
                 model.updateCSS();
             }
         },
         
-        upArrowPressed: function(){
-            if (!model.selectedCell.parentNode.previousSibling){
-                model.newlySelectedCell = model.selectedCell.parentNode.parentNode.lastChild.childNodes[model.selectedCell.cellIndex];
+        upArrowPressed: function()
+        {
+            if (model.selectedRow === 0){
+                model.selectedRow = 6;
+                model.newlySelectedCell = model.calArr[model.selectedRow -= 1][model.selectedColumn];
                 model.updateCSS();
             }else{
-                model.newlySelectedCell = model.selectedCell.parentNode.previousSibling.childNodes[model.selectedCell.cellIndex];
+                model.newlySelectedCell = model.calArr[model.selectedRow -= 1][model.selectedColumn];
                 model.updateCSS();
             }
         },
         
-        downArrowPressed: function(){
-            if (!model.selectedCell.parentNode.nextSibling){
-                model.newlySelectedCell = model.selectedCell.parentNode.parentNode.firstChild.childNodes[model.selectedCell.cellIndex];
+        downArrowPressed: function()
+        {
+           if (model.selectedRow === 5){
+                //selectedRow is -1 so that it will be 0 in the array
+                model.selectedRow = -1;
+                model.newlySelectedCell = model.calArr[model.selectedRow += 1][model.selectedColumn];
                 model.updateCSS();
             }else{
-                model.newlySelectedCell = model.selectedCell.parentNode.nextSibling.childNodes[model.selectedCell.cellIndex];
+                model.newlySelectedCell = model.calArr[model.selectedRow += 1][model.selectedColumn];
                 model.updateCSS();
             }
         },
         
-        rightArrowPressed: function(){
-            if (!model.selectedCell.nextSibling){
-                model.newlySelectedCell = model.selectedCell.parentNode.firstChild;
+        rightArrowPressed: function()
+        {
+            if (model.selectedColumn === 6){
+                //selectedColumn is -1 so that it will be 0 in the array
+                model.selectedColumn = -1;
+                model.newlySelectedCell = model.calArr[model.selectedRow][model.selectedColumn += 1];
                 model.updateCSS();
             }else{
-                model.newlySelectedCell = model.selectedCell.nextSibling;
+                model.newlySelectedCell = model.calArr[model.selectedRow][model.selectedColumn += 1];
                 model.updateCSS();
             }
         }
@@ -204,7 +220,8 @@
             }
         },
         
-        highlightSelectedDay: function(){
+        highlightSelectedDay: function()
+        {
             model.selectedCell.className = "selected";
         }
     };
@@ -215,7 +232,8 @@
         submitButton: document.getElementById("submitButton"),
         body: document.getElementById("myBody"),
         
-        init: function(){
+        init: function()
+        {
             view.createTable();
             view.setDates(model.currentMonth, model.currentYear);
             
@@ -227,14 +245,18 @@
             this.nextDiv.addEventListener("click", model.nextMonth, false);
             this.submitButton.addEventListener("click", controller.handleSubmit, false);
         },
-        handleSubmit: function(){
+        handleSubmit: function()
+        {
             model.displayedMonth = parseInt(document.monthYearForm.month.value);
             model.displayedYear  = parseInt(document.monthYearForm.year.value)
             view.setDates(parseInt(document.monthYearForm.month.value), parseInt(document.monthYearForm.year.value));
         },
         
-        handleClick: function(){
+        handleClick: function()
+        {
             model.newlySelectedCell = this;
+            model.selectedColumn = model.newlySelectedCell.cellIndex;
+            model.selectedRow = model.newlySelectedCell.parentNode.rowIndex;
             model.updateCSS();
         },
         
