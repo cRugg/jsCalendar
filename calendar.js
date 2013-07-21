@@ -104,6 +104,7 @@
             for(var i = 0; i < 6; ++i){
                 for(var j = 0; j < 7; ++j){
                     if (parseInt(model.calArr[i][j].textContent) === model.currentDay){
+                        model.newlySelectedCell = model.calArr[i][j];
                         model.selectedCell = model.calArr[i][j];
                         model.selectedRow = i;
                         model.selectedColumn = j;
@@ -112,23 +113,16 @@
                 }
             }
         },
-        
-        updateCSS: function()
-        {
-            model.selectedCell.className = "";
-            model.selectedCell = model.newlySelectedCell;
-            view.highlightSelectedDay();
-        },
-        
+
         leftArrowPressed: function()
         {
             if (model.selectedColumn === 0){
                 model.selectedColumn = 7;
                 model.newlySelectedCell = model.calArr[model.selectedRow][model.selectedColumn -= 1];
-                model.updateCSS();
+                view.highlightSelectedDay();
             }else{
                 model.newlySelectedCell = model.calArr[model.selectedRow][model.selectedColumn -= 1];
-                model.updateCSS();
+                view.highlightSelectedDay();
             }
         },
         
@@ -137,10 +131,10 @@
             if (model.selectedRow === 0){
                 model.selectedRow = 6;
                 model.newlySelectedCell = model.calArr[model.selectedRow -= 1][model.selectedColumn];
-                model.updateCSS();
+                view.highlightSelectedDay();
             }else{
                 model.newlySelectedCell = model.calArr[model.selectedRow -= 1][model.selectedColumn];
-                model.updateCSS();
+                view.highlightSelectedDay();
             }
         },
         
@@ -150,10 +144,10 @@
                 //selectedRow is -1 so that it will be 0 in the array
                 model.selectedRow = -1;
                 model.newlySelectedCell = model.calArr[model.selectedRow += 1][model.selectedColumn];
-                model.updateCSS();
+                view.highlightSelectedDay();
             }else{
                 model.newlySelectedCell = model.calArr[model.selectedRow += 1][model.selectedColumn];
-                model.updateCSS();
+                view.highlightSelectedDay();
             }
         },
         
@@ -163,11 +157,15 @@
                 //selectedColumn is -1 so that it will be 0 in the array
                 model.selectedColumn = -1;
                 model.newlySelectedCell = model.calArr[model.selectedRow][model.selectedColumn += 1];
-                model.updateCSS();
+                view.highlightSelectedDay();
             }else{
                 model.newlySelectedCell = model.calArr[model.selectedRow][model.selectedColumn += 1];
-                model.updateCSS();
+                view.highlightSelectedDay();
             }
+        },
+        spacebarPressed: function(){
+            model.selectedCell.className = "";
+            model.selectCurrentDay();
         }
     };
 
@@ -222,6 +220,8 @@
         
         highlightSelectedDay: function()
         {
+            model.selectedCell.className = "";
+            model.selectedCell = model.newlySelectedCell;
             model.selectedCell.className = "selected";
         }
     };
@@ -278,10 +278,12 @@
             if (e.keyCode === 39){
                 model.rightArrowPressed();
             }
+            //space
+            if (e.keyCode === 32){
+                model.spacebarPressed();
+            }
         }
         
-    };
-    
-    
+    };  
     controller.init();  
 }());
