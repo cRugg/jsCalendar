@@ -239,7 +239,7 @@
             
             model.selectCurrentDay();
             
-            this.body.addEventListener("keydown", controller.handleArrowKeys, false);
+            this.body.addEventListener("keydown", controller.handleKeys, false);
 
             this.prevDiv.addEventListener("click", model.prevMonth, false);
             this.nextDiv.addEventListener("click", model.nextMonth, false);
@@ -257,10 +257,10 @@
             model.newlySelectedCell = this;
             model.selectedColumn = model.newlySelectedCell.cellIndex;
             model.selectedRow = model.newlySelectedCell.parentNode.rowIndex;
-            model.updateCSS();
+            view.highlightSelectedDay();
         },
         
-        handleArrowKeys: function(e)
+        handleKeys: function(e)
         {
             //left
             if (e.keyCode === 37){
